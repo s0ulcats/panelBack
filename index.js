@@ -10,9 +10,9 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3001;
-const DB_USER = process.env.DB_USER;
-const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_NAME = process.env.DB_NAME;
+const DB_USER = tbeteam229;
+const DB_PASSWORD = yQ4fnXTcCUr4x40J;
+const DB_NAME = tbepanel;
 
 app.use(cors());
 app.use(express.json());
