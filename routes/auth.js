@@ -1,16 +1,15 @@
 const express = require('express');
-const { register, login, getMe } = require('../controllers/auth.js'); // Функции register, login и getMe должны быть импортированы
+const { register, login, getMe } = require('../controllers/auth.js');
 const { checkAuth } = require('../utils/checkAuth.js');
 const Token = require('../models/Token.js');
 const fetch = require('node-fetch');
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => register); // Здесь register должно быть функцией
-router.post('/login', async (req, res) => login); // Здесь login должно быть функцией
-router.post('/me', async (req, res) => checkAuth, getMe); // Функция checkAuth и getMe
+router.post('/register', register);
+router.post('/login', login);
+router.post('/me', checkAuth, getMe);
 
-// Убедитесь, что остальные маршруты используют правильные функции
 router.get('/get-token', async (req, res) => {
   try {
     const token = await Token.findOne().sort({ createdAt: -1 }).exec();
@@ -74,6 +73,20 @@ router.post('/save-action', async (req, res) => {
   } catch (error) {
     console.error('Ошибка сохранения действия:', error);
     res.status(500).json({ error: 'Не удалось сохранить действие' });
+  }
+});
+
+router.get('/users/:username/tokens', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const tokens = await Token.find({ username }).exec();
+    if (!tokens) {
+      return res.status(404).json({ message: "Token logs not found" });
+    }
+    res.json(tokens);
+  } catch (error) {
+    console.error("Error fetching tokens:", error);
+    res.status(500).json({ message: "Error fetching token logs" });
   }
 });
 
