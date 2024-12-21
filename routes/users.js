@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import { deleteUser, getAllUsers, getUserById, saveToken, updateAccountData } from '../controllers/users.js';
-import User from '../models/User.js';
-import Action from '../models/Action.js';
-import { getActionsByUser } from '../controllers/action.js';
-import Token from '../models/Token.js';
+const express = require('express');
+const { deleteUser, getAllUsers, getUserById, saveToken, updateAccountData } = require('../controllers/users.js');
+const User = require('../models/User.js');
+const Action = require('../models/Action.js');
+const { getActionsByUser } = require('../controllers/action.js');
+const Token = require('../models/Token.js');
 
-const router = new Router();
+const router = express.Router();
 
 router.get('/', getAllUsers);
 router.get('/:id', getUserById);
@@ -66,5 +66,4 @@ router.get('/get-token', async (req, res) => {
   }
 });
 
-
-export default router;
+module.exports = router;

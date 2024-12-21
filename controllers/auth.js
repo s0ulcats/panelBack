@@ -1,8 +1,8 @@
-import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -40,7 +40,7 @@ export const register = async (req, res) => {
     }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -72,7 +72,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const getMe = async (req, res) => {
+const getMe = async (req, res) => {
     try {
         const user = await User.findById(req.userId);
 
@@ -94,6 +94,8 @@ export const getMe = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({message: "Not access"});
+        return res.status(500).send({ message: "Not access" });
     }
-}
+};
+
+module.exports = { register, login, getMe };

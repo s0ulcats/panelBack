@@ -1,6 +1,6 @@
-import Action from '../models/Action.js';
+const Action = require('../models/Action');
 
-export const getActionsByUser = async (req, res) => {
+const getActionsByUser = async (req, res) => {
   const { username } = req.params;
 
   try {
@@ -11,3 +11,5 @@ export const getActionsByUser = async (req, res) => {
     res.status(500).json({ message: "Произошла ошибка при получении действий" });
   }
 };
+
+module.exports = { getActionsByUser };

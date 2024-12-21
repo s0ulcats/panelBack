@@ -1,19 +1,22 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
-export const checkAuth = (req, res, next) => {
-    const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+const checkAuth = (req, res, next) => {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.replace(/Bearer\s?/, '');
 
-    if (token) {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.userId = decoded.id;
-            next();
-        } catch (error) {
-            console.error('Token verification error:', error);
-            return res.status(403).send({ message: 'No access' });
-        }
-    } else {
+    if (!token) {
         console.warn('No token provided');
-        return res.status(403).send({ message: 'No access' });
+        return res.status(403).json({ message: 'No access' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        next();
+    } catch (error) {
+        console.error('Token verification error:', error);
+        return res.status(403).json({ message: 'Invalid token' });
     }
 };
+
+module.exports = checkAuth;

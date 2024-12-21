@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const TokenSchema = new mongoose.Schema(
   {
@@ -6,9 +6,9 @@ const TokenSchema = new mongoose.Schema(
     action: { type: String, required: true },
     username: { type: String, required: true },
     deleted: { type: Boolean, default: false },
-    actionTimestamp: { type: Date, default: Date.now },  // Время действия
+    actionTimestamp: { type: Date, default: Date.now }, // Время действия
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Token", TokenSchema);
+module.exports = mongoose.model('Token', TokenSchema);

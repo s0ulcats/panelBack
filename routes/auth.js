@@ -1,13 +1,16 @@
-import { Router } from 'express';
-import { register, login, getMe } from '../controllers/auth.js';
-import { checkAuth } from '../utils/checkAuth.js';
-import Token from '../models/Token.js';
+const express = require('express');
+const { register, login, getMe } = require('../controllers/auth.js'); // Функции register, login и getMe должны быть импортированы
+const { checkAuth } = require('../utils/checkAuth.js');
+const Token = require('../models/Token.js');
+const fetch = require('node-fetch');
 
-const router = new Router();
+const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
-router.post('/me', checkAuth, getMe);
+router.post('/register', async (req, res) => register); // Здесь register должно быть функцией
+router.post('/login', async (req, res) => login); // Здесь login должно быть функцией
+router.post('/me', async (req, res) => checkAuth, getMe); // Функция checkAuth и getMe
+
+// Убедитесь, что остальные маршруты используют правильные функции
 router.get('/get-token', async (req, res) => {
   try {
     const token = await Token.findOne().sort({ createdAt: -1 }).exec();
@@ -19,6 +22,7 @@ router.get('/get-token', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 router.post('/save-token', async (req, res) => {
   const { idt, action } = req.body;
 
@@ -37,7 +41,9 @@ router.post('/save-token', async (req, res) => {
     console.error('Ошибка сохранения токена:', error);
     res.status(500).json({ error: 'Ошибка сервера' });
   }
-});router.post('/save-action', async (req, res) => {
+});
+
+router.post('/save-action', async (req, res) => {
   const { idt, action, username } = req.body;
 
   if (!idt || !action || !username) {
@@ -45,18 +51,16 @@ router.post('/save-token', async (req, res) => {
   }
 
   try {
-    // Обновляем токен, сохраняем время действия и пользователя
     const token = await Token.findOneAndUpdate(
       { idt },
-      { action, deleted: true, username, updatedAt: new Date() },  // Время обновления
+      { action, deleted: true, username, updatedAt: new Date() },
       { new: true, upsert: true }
     );
 
-    // Отправляем данные на PHP сервер (если требуется)
     const response = await fetch('http://localhost/cn/err', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idt, action, username }),  // Отправляем данные
+      body: JSON.stringify({ idt, action, username }),
     });
 
     const phpResponse = await response.json();
@@ -72,18 +76,5 @@ router.post('/save-token', async (req, res) => {
     res.status(500).json({ error: 'Не удалось сохранить действие' });
   }
 });
-router.get('/users/:username/tokens', async (req, res) => {
-  const { username } = req.params;
-  try {
-      // Получаем токены для пользователя из базы данных
-      const tokens = await Token.find({ username }).exec();
-      if (!tokens) {
-          return res.status(404).json({ message: "Token logs not found" });
-      }
-      res.json(tokens);
-  } catch (error) {
-      console.error("Error fetching tokens:", error);
-      res.status(500).json({ message: "Error fetching token logs" });
-  }
-});
-export default router;
+
+module.exports = router;

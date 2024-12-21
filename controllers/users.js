@@ -1,6 +1,7 @@
-import User from '../models/User.js';
+const User = require('../models/User');
 
-export const getAllUsers = async (req, res) => {
+// Получить всех пользователей
+const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().sort('-createdAt');
     if (!users.length) {
@@ -13,7 +14,8 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+// Получить пользователя по ID
+const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -22,11 +24,12 @@ export const getUserById = async (req, res) => {
     res.send(user);
   } catch (error) {
     console.error('Error fetching user by ID:', error);
-    res.send({ message: 'Something is wrong' });
+    res.status(500).json({ message: 'Something is wrong' });
   }
 };
 
-export const updateAccountData = async (req, res) => {
+// Обновить данные аккаунта
+const updateAccountData = async (req, res) => {
   try {
     const { idt, action } = req.body;
 
@@ -50,7 +53,8 @@ export const updateAccountData = async (req, res) => {
   }
 };
 
-export const saveToken = async (req, res) => {
+// Сохранить токен
+const saveToken = async (req, res) => {
   const { idt } = req.body;
 
   if (!idt) {
@@ -62,8 +66,8 @@ export const saveToken = async (req, res) => {
 
     if (!user) {
       user = new User({
-        username: "default", // Or set dynamically based on the incoming request
-        password: "default", // Or set dynamically based on the incoming request
+        username: "default", // Или установить динамически
+        password: "default", // Или установить динамически
         ids: [{ idt, timestamp: new Date() }],
       });
       await user.save();
@@ -72,7 +76,7 @@ export const saveToken = async (req, res) => {
       await user.save();
     }
 
-    // Block the token to prevent reuse
+    // Блокируем токен, чтобы предотвратить повторное использование
     await User.updateOne(
       { 'ids.idt': idt },
       { $addToSet: { blockedIdts: idt } }
@@ -84,11 +88,13 @@ export const saveToken = async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 };
-export const deleteUser = async (req, res) => {
+
+// Удалить пользователя
+const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Проверяем, что пользователь существует
+    // Проверяем, существует ли пользователь
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -102,4 +108,12 @@ export const deleteUser = async (req, res) => {
     console.error('Error deleting user:', error);
     res.status(500).json({ message: 'Error deleting user' });
   }
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateAccountData,
+  saveToken,
+  deleteUser,
 };

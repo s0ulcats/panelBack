@@ -1,10 +1,10 @@
-import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
-import fileUpload from 'express-fileupload';
-import mongoose from 'mongoose';
-import authRoute from './routes/auth.js';
-import usersRoute from './routes/users.js';
+const cors = require('cors');
+const dotenv = require('dotenv');
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const mongoose = require('mongoose');
+const authRoute = require('./routes/auth.js');
+const usersRoute = require('./routes/users.js');
 
 dotenv.config();
 const app = express();
@@ -28,7 +28,6 @@ async function start() {
             `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ciwlq.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
         );
         console.log('Connected to DB');
-
 
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`);

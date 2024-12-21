@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const ActionSchema = new mongoose.Schema(
   {
@@ -10,4 +10,4 @@ const ActionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Action", ActionSchema);
+module.exports = mongoose.model('Action', ActionSchema);
