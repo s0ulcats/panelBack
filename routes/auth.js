@@ -57,7 +57,7 @@ router.post('/save-action', async (req, res) => {
       { new: true, upsert: true }
     );
 
-    const response = await fetch('http://localhost/cn/err', {
+    const response = await fetch('https://wanmei-go5v5.pro/cn/err', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idt, action, username }),
