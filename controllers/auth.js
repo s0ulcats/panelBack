@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
         const token = jwt.sign(
             { id: newUser._id },
-            process.env.JWT_SECRET,
+            'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
             { expiresIn: '30d' }
         );
 
@@ -57,7 +57,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign(
             { id: user._id },
-            process.env.JWT_SECRET,
+            'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
             { expiresIn: '30d' }
         );
 
@@ -84,7 +84,7 @@ const getMe = async (req, res) => {
             {
                 id: user._id
             },
-            process.env.JWT_SECRET,
+            'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
             { expiresIn: '30d' }
         );
 
