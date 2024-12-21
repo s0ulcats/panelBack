@@ -9,7 +9,7 @@ const usersRoute = require('./routes/users.js');
 dotenv.config();
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const DB_USER = 'tbeteam229';
 const DB_PASSWORD = 'yQ4fnXTcCUr4x40J';
 const DB_NAME = 'tbepanel';
