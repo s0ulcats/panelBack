@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
 
       const token = jwt.sign(
           { id: newUser._id },
-          process.env.JWT_SECRET,
+          'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
           { expiresIn: '30d' }
       );
 
@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
 
       const token = jwt.sign(
           { id: user._id },
-          process.env.JWT_SECRET,
+          'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
           { expiresIn: '30d' }
       );
 
@@ -85,7 +85,7 @@ router.post('/me', (req, res, next) => {
 
   if (token) {
       try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          const decoded = jwt.verify(token, 'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893');
           req.userId = decoded.id;
           next();
       } catch (error) {
@@ -108,7 +108,7 @@ router.post('/me', (req, res, next) => {
           {
               id: user._id
           },
-          process.env.JWT_SECRET,
+          'aswjodnfdfjknassdfgsdfvfqw9u2qe9r893',
           { expiresIn: '30d' }
       );
 
