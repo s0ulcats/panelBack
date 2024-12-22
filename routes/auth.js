@@ -1,16 +1,145 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const { register, login, getMe } = require('../controllers/auth.js'); // Функции register, login и getMe должны быть импортированы
 const { checkAuth } = require('../utils/checkAuth.js');
 const Token = require('../models/Token.js');
 const fetch = require('node-fetch');
+const User = require('../models/User.js');
 
 const router = express.Router();
 
-router.post('/register',register); // Здесь register должно быть функцией
-router.post('/login', login); // Здесь login должно быть функцией
-router.post('/me', async (req, res) => checkAuth, getMe); // Функция checkAuth и getMe
+router.post('/register', async (req, res) => {
+  try {
+      const { username, phone, password } = req.body;
 
-// Убедитесь, что остальные маршруты используют правильные функции
+      const isUsed = await User.findOne({ phone });
+
+      if (isUsed) {
+          return res.status(402).send({ message: 'This phone number is already in use' });
+      }
+
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+
+      const newUser = new User({
+          phone,
+          username,
+          password: hash,
+      });
+
+      const token = jwt.sign(
+          { id: newUser._id },
+          process.env.JWT_SECRET,
+          { expiresIn: '30d' }
+      );
+
+      await newUser.save();
+
+      return res.send({
+          newUser,
+          token,
+          message: "Registration successful",
+      });
+
+  } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: "Error while creating user" });
+  }
+})
+
+router.post('/login', async (req, res) => {
+  try {
+      const { username, phone, password } = req.body;
+      const user = await User.findOne({ phone });
+
+      if (!user) {
+          return res.status(404).send({ message: "User doesn't exist" });
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordCorrect) {
+          return res.status(401).send({ message: 'Incorrect password' });
+      }
+
+      const token = jwt.sign(
+          { id: user._id },
+          process.env.JWT_SECRET,
+          { expiresIn: '30d' }
+      );
+
+      return res.send({
+          token,
+          user,
+          message: "Login successful",
+      });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: "Error with authentication" });
+  }
+})
+
+router.post('/me', (req, res, next) => {
+  const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
+
+  if (token) {
+      try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          req.userId = decoded.id;
+          next();
+      } catch (error) {
+          console.error('Token verification error:', error);
+          return res.status(403).send({ message: 'No access' });
+      }
+  } else {
+      console.warn('No token provided');
+      return res.status(403).send({ message: 'No access' });
+  }
+}, async (req, res) => {
+  try {
+      const user = await User.findById(req.userId);
+
+      if (!user) {
+          return res.send({ message: "User doesn't exist" });
+      }
+
+      const token = jwt.sign(
+          {
+              id: user._id
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: '30d' }
+      );
+
+      return res.send({
+          user,
+          token
+      });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).send({message: "Not access"});
+  }
+})
+router.get('/users/:username/tokens', async (req, res) => {
+  const { username } = req.params;
+  
+  try {
+      const user = await User.findOne({ username });
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      // Здесь можно добавить логику получения токенов для пользователя
+      const tokens = await Token.find({ username: user.username });
+
+      res.json({ tokens });
+  } catch (error) {
+      console.error("Error fetching tokens:", error);
+      res.status(500).json({ message: "Error fetching tokens" });
+  }
+});
 router.get('/get-token', async (req, res) => {
   try {
     const token = await Token.findOne().sort({ createdAt: -1 }).exec();
