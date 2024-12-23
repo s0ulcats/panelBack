@@ -11,19 +11,18 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-      const { username, phone, password } = req.body;
+      const { username, password } = req.body;
 
-      const isUsed = await User.findOne({ phone });
+      const isUsed = await User.findOne({ username });
 
       if (isUsed) {
-          return res.status(402).send({ message: 'This phone number is already in use' });
+          return res.status(402).send({ message: 'This username is already in use' });
       }
 
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
 
       const newUser = new User({
-          phone,
           username,
           password: hash,
       });
@@ -50,8 +49,8 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-      const { username, phone, password } = req.body;
-      const user = await User.findOne({ phone });
+      const { username, password } = req.body;
+      const user = await User.findOne({ username });
 
       if (!user) {
           return res.status(404).send({ message: "User doesn't exist" });
