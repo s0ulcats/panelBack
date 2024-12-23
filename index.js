@@ -15,7 +15,7 @@ const DB_PASSWORD = 'yQ4fnXTcCUr4x40J';
 const DB_NAME = 'tbepanel';
 
 app.use(cors({ origin: '*' }));
-app.use(cors({ origin: 'https://tbe-faceit.online' }));
+app.use(cors({ origin: 'http://145.223.23.122:3000' }));
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
