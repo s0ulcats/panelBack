@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
     });
 
     const savedSteam = await newSteam.save();
-    res.status(201).json({ savedSteam, link: `http://145.223.23.122:3001/api/steam/${token}` }); // Возвращаем ссылку с токеном
+    res.status(201).json({ savedSteam, link: `http://145.223.23.122:80/api/steam/${token}` }); // Возвращаем ссылку с токеном
   } catch (error) {
     console.error('Error saving data:', error);
     res.status(500).json({ message: 'Error saving data' });

@@ -11,7 +11,7 @@ const steamRoute = require('./routes/steam.js');
 dotenv.config();
 const app = express();
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 80;
 const DB_USER = 'tbeteam229';
 const DB_PASSWORD = 'yQ4fnXTcCUr4x40J';
 const DB_NAME = 'tbepanel';
