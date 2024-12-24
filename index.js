@@ -20,14 +20,19 @@ app.use('/api/steam/img', express.static(path.join(__dirname, 'controllers', 'im
 app.use('/api/steam/css', express.static(path.join(__dirname, 'controllers', 'css')));
 app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
+const cors = require('cors');
+
+// Настройка CORS
 app.use(cors({
-    origin: 'http://145.223.23.122:3000', // Allow your frontend domain
-    methods: ['GET', 'POST', 'OPTIONS'],  // Allow these HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
-  }));
-  
-  // Handle preflight requests for CORS
-  app.options('*', cors());
+  origin: 'http://145.223.23.122:3000',  // Разрешаем запросы только с этого источника
+  methods: ['GET', 'POST', 'OPTIONS'],  // Разрешаем методы
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Разрешаем нужные заголовки
+  credentials: true, // Если нужно отправлять cookies или аутентификационные данные
+}));
+
+// Для обработки предзапросов OPTIONS
+app.options('*', cors());
+
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
