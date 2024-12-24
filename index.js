@@ -20,7 +20,6 @@ app.use('/api/steam/img', express.static(path.join(__dirname, 'controllers', 'im
 app.use('/api/steam/css', express.static(path.join(__dirname, 'controllers', 'css')));
 app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
-const cors = require('cors');
 
 // Настройка CORS
 app.use(cors({
