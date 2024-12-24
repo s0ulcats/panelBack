@@ -22,6 +22,8 @@ app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
 app.use(cors({ origin: '*' }));
 app.use(cors({ origin: 'http://145.223.23.122:3000' }));
+app.use(cors({ origin: 'http://145.223.23.122/api/steam' }));
+app.use(cors({ origin: 'http://145.223.23.122:3000/api/steam' }));
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
