@@ -20,7 +20,14 @@ app.use('/api/steam/img', express.static(path.join(__dirname, 'controllers', 'im
 app.use('/api/steam/css', express.static(path.join(__dirname, 'controllers', 'css')));
 app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
-app.use(cors({ origin: 'http://145.223.23.122:3000' }));
+app.use(cors({
+    origin: 'http://145.223.23.122:3000', // Allow your frontend domain
+    methods: ['GET', 'POST', 'OPTIONS'],  // Allow these HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
+  }));
+  
+  // Handle preflight requests for CORS
+  app.options('*', cors());
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
