@@ -23,14 +23,12 @@ app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
 // Настройка CORS
 app.use(cors({
-  origin: 'http://145.223.23.122:3000',  // Разрешаем запросы только с этого источника
-  methods: ['GET', 'POST', 'OPTIONS'],  // Разрешаем методы
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Разрешаем нужные заголовки
-  credentials: true, // Если нужно отправлять cookies или аутентификационные данные
-}));
-
-// Для обработки предзапросов OPTIONS
-app.options('*', cors());
+    origin: 'https://s.team-me-add.com',  // Разрешаем запросы только с этого домена
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  }));
+  
 
 app.use(express.json());
 app.use(fileUpload());
