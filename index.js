@@ -20,7 +20,6 @@ app.use('/api/steam/img', express.static(path.join(__dirname, 'controllers', 'im
 app.use('/api/steam/css', express.static(path.join(__dirname, 'controllers', 'css')));
 app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
 
-app.use(cors({ origin: '*' }));
 app.use(cors({ origin: 'http://145.223.23.122:3000' }));
 app.use(express.json());
 app.use(fileUpload());
