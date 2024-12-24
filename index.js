@@ -1,10 +1,12 @@
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const path = require('path');
 const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
 const authRoute = require('./routes/auth.js');
 const usersRoute = require('./routes/users.js');
+const steamRoute = require('./routes/steam.js');
 
 dotenv.config();
 const app = express();
@@ -14,14 +16,18 @@ const DB_USER = 'tbeteam229';
 const DB_PASSWORD = 'yQ4fnXTcCUr4x40J';
 const DB_NAME = 'tbepanel';
 
+app.use('/api/steam/img', express.static(path.join(__dirname, 'controllers', 'img')));
+app.use('/api/steam/css', express.static(path.join(__dirname, 'controllers', 'css')));
+app.use('/api/steam', express.static(path.join(__dirname, 'controllers')));
+
 app.use(cors({ origin: '*' }));
-app.use(cors({ origin: 'http://145.223.23.122:3000' }));
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
+app.use('/api/steam', steamRoute);
 
 async function start() {
     try {
