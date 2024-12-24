@@ -39,6 +39,10 @@ app.use(express.static('uploads'));
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/steam', steamRoute);
+app.get('/test', (req, res) => {
+    res.send('Nginx is working!');
+});
+
 
 async function start() {
     try {

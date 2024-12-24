@@ -2,6 +2,8 @@ const User = require('../models/User');
 
 // Получить всех пользователей
 const getAllUsers = async (req, res) => {
+  console.log('GET /api/users/');
+  res.send('Users route works!');
   try {
     const users = await User.find().sort('-createdAt');
     if (!users.length) {
